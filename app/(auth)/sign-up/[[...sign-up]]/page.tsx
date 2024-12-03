@@ -1,5 +1,12 @@
 import { SignUp } from "@clerk/nextjs";
+import AuthTemplate from "../../AuthTemplate";
 
 export default function Page() {
-  return <SignUp />;
+  return (
+    <>
+      <AuthTemplate>
+        <SignUp />
+      </AuthTemplate>
+    </>
+  );
 }
