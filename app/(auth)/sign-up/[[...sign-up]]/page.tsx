@@ -5,7 +5,7 @@ export default function Page() {
   return (
     <>
       <AuthTemplate>
-        <SignUp />
+        <SignUp path="/sign-up" />
       </AuthTemplate>
     </>
   );
