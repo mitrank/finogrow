@@ -1,5 +1,7 @@
+import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
+import { z } from "zod";
 
 export const runtime = "edge";
 
@@ -11,12 +13,22 @@ app
       message: "Hello Next.js!",
     });
   })
-  .get("/hello/:id", (c) => {
-    return c.json({
-      message: "New ID API!",
-      id: c.req.param("id"),
-    });
-  });
+  .get(
+    "/hello/:id",
+    zValidator(
+      "param",
+      z.object({
+        id: z.number(),
+      })
+    ),
+    (c) => {
+      const { id } = c.req.valid("param");
+      return c.json({
+        message: "New ID API!",
+        id: id,
+      });
+    }
+  );
 
 export const GET = handle(app);
 export const POST = handle(app);
