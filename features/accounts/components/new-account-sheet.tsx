@@ -9,6 +9,7 @@ import { useNewAccount } from "../hooks/use-new-account";
 import { AccountForm } from "./account-form";
 import { insertAccountSchema } from "@/db/schema";
 import { z } from "zod";
+import { useCreatAccount } from "../api/use-create-account";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const formSchema = insertAccountSchema.pick({ name: true });
@@ -17,9 +18,14 @@ type FormValues = z.input<typeof formSchema>;
 
 export const NewAccountSheet = () => {
   const { isOpen, onClose } = useNewAccount();
+  const mutation = useCreatAccount();
 
   const handleOnSubmit = (values: FormValues) => {
-    console.log("submit values", values);
+    mutation.mutate(values, {
+      onSuccess: () => {
+        onClose();
+      },
+    });
   };
 
   return (
@@ -33,7 +39,7 @@ export const NewAccountSheet = () => {
         </SheetHeader>
         <AccountForm
           onSubmit={handleOnSubmit}
-          disabled={false}
+          disabled={mutation.isPending}
           defaultValues={{ name: "" }}
         />
       </SheetContent>
