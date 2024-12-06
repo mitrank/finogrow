@@ -9,7 +9,7 @@ import { useNewAccount } from "../hooks/use-new-account";
 import { AccountForm } from "./account-form";
 import { insertAccountSchema } from "@/db/schema";
 import { z } from "zod";
-import { useCreatAccount } from "../api/use-create-account";
+import { useCreateAccount } from "../api/use-create-account";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const formSchema = insertAccountSchema.pick({ name: true });
@@ -18,7 +18,7 @@ type FormValues = z.input<typeof formSchema>;
 
 export const NewAccountSheet = () => {
   const { isOpen, onClose } = useNewAccount();
-  const mutation = useCreatAccount();
+  const mutation = useCreateAccount();
 
   const handleOnSubmit = (values: FormValues) => {
     mutation.mutate(values, {
