@@ -29,11 +29,13 @@ const app = new Hono()
       const auth = getAuth(c);
       const { from, to, accountId } = c.req.valid("query");
 
-      const defaultTo = new Date().toDateString();
-      const defaultFrom = subDays(defaultTo, 30).toDateString();
+      const defaultTo = new Date();
+      const defaultFrom = subDays(defaultTo, 30);
 
-      const startDate = parse(from || defaultFrom, "dd-MM-yyyy", new Date());
-      const endDate = parse(to || defaultTo, "dd-MM-yyyy", new Date());
+      const startDate = from
+        ? parse(from, "dd-MM-yyyy", new Date())
+        : defaultFrom;
+      const endDate = to ? parse(to, "dd-MM-yyyy", new Date()) : defaultTo;
 
       if (!auth?.userId) {
         return c.json({ error: "Unauthorized" }, 401);
