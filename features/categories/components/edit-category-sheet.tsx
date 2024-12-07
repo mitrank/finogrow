@@ -12,7 +12,7 @@ import { useGetCategoryById } from "../api/use-get-category-by-id";
 import { Loader2 } from "lucide-react";
 import { useEditCategory } from "../api/use-edit-category";
 import { useDeleteCategory } from "../api/use-delete-category";
-import { useConfirm } from "@/components/hooks/use-confirm";
+import { useConfirm } from "@/hooks/use-confirm";
 import { useOpenCategory } from "../hooks/use-open-category";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

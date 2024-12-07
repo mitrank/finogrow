@@ -13,7 +13,7 @@ import { useGetAccountById } from "../api/use-get-account-by-id";
 import { Loader2 } from "lucide-react";
 import { useEditAccount } from "../api/use-edit-account";
 import { useDeleteAccount } from "../api/use-delete-account";
-import { useConfirm } from "../../../components/hooks/use-confirm";
+import { useConfirm } from "../../../hooks/use-confirm";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const formSchema = insertAccountSchema.pick({ name: true });
