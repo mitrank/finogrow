@@ -7,12 +7,12 @@ import { columns } from "./columns";
 import { DataTable } from "@/components/data-table";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useNewCategory } from "@/features/categories/hooks/use-new-category";
-import { useBulkDeleteCategory } from "@/features/categories/api/use-bulk-delete-categories";
+import { useBulkDeleteCategories } from "@/features/categories/api/use-bulk-delete-categories";
 import { useGetCategories } from "@/features/categories/api/use-get-categories";
 
 const CategoriesPage = () => {
   const newCategory = useNewCategory();
-  const deleteCategories = useBulkDeleteCategory();
+  const deleteCategories = useBulkDeleteCategories();
   const categoriesQuery = useGetCategories();
   const categoriesData = categoriesQuery.data || [];
 

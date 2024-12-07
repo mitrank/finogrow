@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 export const useGetCategoryById = (id?: string) => {
   const query = useQuery({
     enabled: !!id,
-    queryKey: ["categories", { id }],
+    queryKey: ["category", { id }],
     queryFn: async () => {
       const response = await client.api.categories[":id"].$get({
         param: { id },
