@@ -15,6 +15,13 @@
       "when": 1733411480025,
       "tag": "0001_tiny_wrecker",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1733566022139,
+      "tag": "0002_nostalgic_tinkerer",
+      "breakpoints": true
     }
   ]
 }
