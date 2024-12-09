@@ -179,7 +179,7 @@ export const TransactionForm = ({
                   {...field}
                   value={field.value ?? ""}
                   disabled={disabled}
-                  placeholder="Enter name of payee"
+                  placeholder="Add notes to this transaction..."
                 />
               </FormControl>
             </FormItem>
