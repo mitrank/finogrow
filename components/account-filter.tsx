@@ -42,7 +42,7 @@ export const AccountFilter = () => {
       },
       { skipNull: true, skipEmptyString: true }
     );
-    console.log(url);
+
     router.push(url);
   };
 
