@@ -10,7 +10,6 @@ export const CategoryTooltip = ({ active, payload }: any) => {
   const name = payload[0].payload.name;
   const value = payload[0].value;
   const fill = payload[0].payload.fill;
-  console.log(payload);
 
   return (
     <div className="rounded-sm bg-white shadow-sm border overflow-hidden">

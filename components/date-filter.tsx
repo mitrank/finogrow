@@ -8,7 +8,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "./ui/popover";
-import { format, subDays } from "date-fns";
+import { format, parse, subDays } from "date-fns";
 import { formatDateRange } from "@/lib/utils";
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
@@ -29,16 +29,16 @@ export const DateFilter = () => {
   const defaultFrom = subDays(defaultTo, 30);
 
   const paramState = {
-    from: from ? new Date(from) : defaultFrom,
-    to: to ? new Date(to) : defaultTo,
+    from: from ? parse(from, "dd-MM-yyyy", new Date()) : defaultFrom,
+    to: to ? parse(to, "dd-MM-yyyy", new Date()) : defaultTo,
   };
 
   const [date, setDate] = useState<DateRange | undefined>(paramState);
 
   const pushToUrl = (dateRange: DateRange | undefined) => {
     const query = {
-      from: format(dateRange?.from || defaultFrom, "dd-MM-yyy"),
-      to: format(dateRange?.to || defaultTo, "dd-MM-yyy"),
+      from: format(dateRange?.from || defaultFrom, "dd-MM-yyyy"),
+      to: format(dateRange?.to || defaultTo, "dd-MM-yyyy"),
       accountId,
     };
 
