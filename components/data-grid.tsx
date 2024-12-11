@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { DataCard, DataCardLoading } from "./data-card";
 import { FaPiggyBank } from "react-icons/fa";
 import { FaArrowTrendUp, FaArrowTrendDown } from "react-icons/fa6";
+import { parse, subDays } from "date-fns";
 
 export const DataGrid = () => {
   const params = useSearchParams();
@@ -14,7 +15,15 @@ export const DataGrid = () => {
 
   const { data, isLoading } = useGetSummary();
 
-  const dateRangeLabel = formatDateRange({ to, from });
+  const defaultTo = new Date();
+  const defaultFrom = subDays(defaultTo, 30);
+
+  const paramState = {
+    from: from ? parse(from, "dd-MM-yyyy", new Date()) : defaultFrom,
+    to: to ? parse(to, "dd-MM-yyyy", new Date()) : defaultTo,
+  };
+
+  const dateRangeLabel = formatDateRange(paramState);
 
   if (isLoading) {
     return (
