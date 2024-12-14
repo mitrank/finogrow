@@ -1,5 +1,6 @@
 "use client";
 
+import { PlaidLink } from "@/components/plaid-link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,10 +10,6 @@ import { useState } from "react";
 const SettingsPage = () => {
   const [isSubscriptionActive, setIsSubscriptionActive] =
     useState<boolean>(false);
-
-  const handleLinkAccount = () => {
-    // TODO: Plaid bank account linking
-  };
 
   const handleManageSubscription = () => {
     // TODO: Add Paywall
@@ -37,9 +34,7 @@ const SettingsPage = () => {
                 No bank accounts connected
               </p>
             </div>
-            <Button variant="outline" onClick={handleLinkAccount}>
-              Link Account
-            </Button>
+            <PlaidLink />
           </div>
           <Separator />
           <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center pt-6 lg:pt-4 gap-y-4 lg:gap-y-0">
@@ -63,7 +58,7 @@ const SettingsPage = () => {
                 </span>
               </Badge>
             </div>
-            <Button onClick={handleManageSubscription}>
+            <Button className="lg:w-[170px]" onClick={handleManageSubscription}>
               Manage Subscriptions
             </Button>
           </div>
