@@ -1,11 +1,11 @@
 import { create } from "zustand";
 
 type AccountDataState = {
-  accountData: object[];
+  linkedAccounts: object[];
   onUpdate: (accountData: object[]) => void;
 };
 
 export const useAccountData = create<AccountDataState>((set) => ({
-  accountData: [],
-  onUpdate: (accountData: object[]) => set({ accountData }),
+  linkedAccounts: [],
+  onUpdate: (linkedAccounts: object[]) => set({ linkedAccounts }),
 }));

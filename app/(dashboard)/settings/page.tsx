@@ -5,14 +5,15 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { useAccountData } from "@/features/aggregator/hooks/use-account-data";
+import { useGetLinkedAccounts } from "@/features/aggregator/api/use-get-linked-accounts";
 import { useState } from "react";
 
 const SettingsPage = () => {
   const [isSubscriptionActive, setIsSubscriptionActive] =
     useState<boolean>(false);
 
-  const { accountData } = useAccountData();
+  const linkedAccountsQuery = useGetLinkedAccounts();
+  const linkedAccounts = linkedAccountsQuery.data || [];
 
   const handleManageSubscription = () => {
     // TODO: Add Paywall
@@ -34,8 +35,8 @@ const SettingsPage = () => {
                 Bank Account
               </h2>
               <p className="text-muted-foreground">
-                {accountData.length > 0
-                  ? `${accountData.length} bank account(s) connected`
+                {linkedAccounts.length > 0
+                  ? `${linkedAccounts.length} bank account(s) connected`
                   : "No bank accounts connected"}
               </p>
             </div>

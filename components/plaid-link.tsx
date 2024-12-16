@@ -7,22 +7,25 @@ import {
 } from "react-plaid-link";
 import { useCreateLinkToken } from "@/features/aggregator/api/use-create-link-token";
 import { useUser } from "@clerk/nextjs";
-import { useExchangePublicToken } from "@/features/aggregator/api/use-exchange-public-token";
-import { useAccountData } from "@/features/aggregator/hooks/use-account-data";
+import { useLinkAccount } from "@/features/aggregator/api/use-link-account";
 import { useConfirm } from "@/hooks/use-confirm";
+import { useGetLinkedAccounts } from "@/features/aggregator/api/use-get-linked-accounts";
+import { useUnlinkAccount } from "@/features/aggregator/api/use-unlink-account";
 
 export const PlaidLink = () => {
   const { user } = useUser();
 
   const [token, setToken] = useState("");
-  const { accountData, onUpdate: onUpdateAccountData } = useAccountData();
+  const linkedAccountsQuery = useGetLinkedAccounts();
+  const linkedAccountsData = linkedAccountsQuery.data || [];
   const [ConfirmationDialog, confirm] = useConfirm(
     "Are you sure?",
     "You're about to disconnect all the linked bank accounts with FinoGrow."
   );
 
   const linkTokenMutation = useCreateLinkToken();
-  const publicTokenMutation = useExchangePublicToken();
+  const linkAccountMutation = useLinkAccount();
+  const unlinkAccountMutation = useUnlinkAccount();
 
   useEffect(() => {
     const getLinkToken = async () => {
@@ -49,21 +52,17 @@ export const PlaidLink = () => {
     const ok = await confirm();
 
     if (ok) {
-      onUpdateAccountData([]); // Account Data to be updated from DB with the plaid_id
+      unlinkAccountMutation.mutate({
+        ids: linkedAccountsData
+          .filter((account) => account.id)
+          .map((account) => account.id!),
+      });
     }
   };
 
   const onSuccess = useCallback<PlaidLinkOnSuccess>(
     async (public_token: string) => {
-      publicTokenMutation.mutate(
-        { publicToken: public_token },
-        {
-          onSuccess: (data) => {
-            console.log("on successful exchange of public token -> ", data);
-            onUpdateAccountData(data.accountsData); // Account Data to be updated from DB with the plaid_id
-          },
-        }
-      );
+      linkAccountMutation.mutate({ publicToken: public_token });
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -79,12 +78,16 @@ export const PlaidLink = () => {
   return (
     <>
       <ConfirmationDialog />
-      {accountData.length > 0 ? (
+      {linkedAccountsData.length > 0 ? (
         <Button
           className="lg:w-[170px]"
           variant="outline"
           onClick={handleUnlinkAccount}
-          disabled={!ready}
+          disabled={
+            !ready ||
+            linkedAccountsQuery.isLoading ||
+            linkedAccountsQuery.isPending
+          }
         >
           Unlink Account
         </Button>
@@ -92,7 +95,11 @@ export const PlaidLink = () => {
         <Button
           className="lg:w-[170px]"
           onClick={() => open()}
-          disabled={!ready}
+          disabled={
+            !ready ||
+            linkedAccountsQuery.isLoading ||
+            linkedAccountsQuery.isPending
+          }
         >
           Link Account
         </Button>
