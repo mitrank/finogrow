@@ -124,6 +124,7 @@ const TransactionsPage = () => {
         </CardHeader>
         <CardContent>
           <DataTable
+            identifier="transactions"
             filterKey="payee"
             columns={columns}
             data={transactionsData}

@@ -22,10 +22,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "./ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "./ui/input";
-import { Trash } from "lucide-react";
+import { Trash, X } from "lucide-react";
 import { useConfirm } from "@/hooks/use-confirm";
+import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -33,6 +34,7 @@ interface DataTableProps<TData, TValue> {
   filterKey: string;
   onDelete: (rows: Row<TData>[]) => void;
   disabled?: boolean;
+  identifier?: string;
 }
 
 export function DataTable<TData, TValue>({
@@ -41,10 +43,17 @@ export function DataTable<TData, TValue>({
   filterKey,
   onDelete,
   disabled,
+  identifier,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [rowSelection, setRowSelection] = useState({});
+  const [categoriesData, setCategoriesData] = useState<
+    {
+      label: string;
+      value: string;
+    }[]
+  >([]);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [ConfirmationDialog, confirm] = useConfirm(
     "Are you absolutely sure?",
@@ -68,10 +77,36 @@ export function DataTable<TData, TValue>({
     },
   });
 
+  const isFiltered = table.getState().columnFilters.length > 0;
+
+  useEffect(() => {
+    if (identifier === "transactions") {
+      const categories = data.reduce(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (acc: { label: string; value: string }[], item: any) => {
+          if (item?.category) {
+            if (!acc.some((entry) => entry.label === item.category)) {
+              acc.push({
+                label: item.category,
+                value: item.category.toLowerCase(),
+              });
+            }
+            return acc;
+          }
+          return [];
+        },
+        []
+      );
+      setCategoriesData(categories);
+    }
+  }, [data, identifier]);
+
+  console.log(data);
+
   return (
     <>
       <ConfirmationDialog />
-      <div className="flex gap-x-2 items-center py-4">
+      <div className="flex flex-col lg:flex-row gap-y-2 lg:gap-x-2 items-center py-4">
         <Input
           placeholder={`Filter ${filterKey}...`}
           value={(table.getColumn(filterKey)?.getFilterValue() as string) ?? ""}
@@ -80,6 +115,26 @@ export function DataTable<TData, TValue>({
           }
           className="max-w-sm"
         />
+        <div className="flex justify-between lg:justify-start items-center w-full gap-x-2">
+          {table.getColumn("category") && (
+            <DataTableFacetedFilter
+              column={table.getColumn("category")}
+              title="Categories"
+              options={categoriesData}
+            />
+          )}
+
+          {isFiltered && (
+            <Button
+              variant="outline"
+              onClick={() => table.resetColumnFilters()}
+            >
+              Reset
+              <X />
+            </Button>
+          )}
+        </div>
+
         {table.getFilteredSelectedRowModel().rows.length > 0 && (
           <Button
             size="sm"
