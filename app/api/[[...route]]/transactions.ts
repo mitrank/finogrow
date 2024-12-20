@@ -11,7 +11,7 @@ import { and, desc, eq, gte, inArray, lte, sql } from "drizzle-orm";
 import { zValidator } from "@hono/zod-validator";
 import { createId } from "@paralleldrive/cuid2";
 import { z } from "zod";
-import { parse, subDays } from "date-fns";
+import { parse, startOfMonth } from "date-fns";
 
 const app = new Hono()
   .get(
@@ -30,7 +30,7 @@ const app = new Hono()
       const { from, to, accountId } = c.req.valid("query");
 
       const defaultTo = new Date();
-      const defaultFrom = subDays(defaultTo, 30);
+      const defaultFrom = startOfMonth(defaultTo);
 
       const startDate = from
         ? parse(from, "dd-MM-yyyy", new Date())

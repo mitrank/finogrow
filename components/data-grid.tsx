@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { DataCard, DataCardLoading } from "./data-card";
 import { FaPiggyBank } from "react-icons/fa";
 import { FaArrowTrendUp, FaArrowTrendDown } from "react-icons/fa6";
-import { parse, subDays } from "date-fns";
+import { parse, startOfMonth } from "date-fns";
 
 export const DataGrid = () => {
   const params = useSearchParams();
@@ -16,7 +16,7 @@ export const DataGrid = () => {
   const { data, isLoading } = useGetSummary();
 
   const defaultTo = new Date();
-  const defaultFrom = subDays(defaultTo, 30);
+  const defaultFrom = startOfMonth(defaultTo);
 
   const paramState = {
     from: from ? parse(from, "dd-MM-yyyy", new Date()) : defaultFrom,

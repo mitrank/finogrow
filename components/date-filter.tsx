@@ -8,7 +8,21 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "./ui/popover";
-import { format, parse, subDays } from "date-fns";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import {
+  endOfMonth,
+  format,
+  parse,
+  startOfMonth,
+  subDays,
+  subMonths,
+} from "date-fns";
 import { formatDateRange } from "@/lib/utils";
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
@@ -26,7 +40,7 @@ export const DateFilter = () => {
   const to = params.get("to") || "";
 
   const defaultTo = new Date();
-  const defaultFrom = subDays(defaultTo, 30);
+  const defaultFrom = startOfMonth(defaultTo);
 
   const paramState = {
     from: from ? parse(from, "dd-MM-yyyy", new Date()) : defaultFrom,
@@ -56,6 +70,22 @@ export const DateFilter = () => {
     router.push(url);
   };
 
+  const handleSelectCustomDateRange = (value: string) => {
+    let toDate = new Date();
+    let fromDate = subDays(toDate, parseInt(value));
+
+    if (value === "this-month") {
+      fromDate = startOfMonth(toDate);
+    } else if (value === "last-month") {
+      fromDate = startOfMonth(subMonths(toDate, 1));
+      toDate = endOfMonth(subMonths(new Date(), 1));
+    }
+    return setDate({
+      from: fromDate,
+      to: toDate,
+    });
+  };
+
   const handleOnReset = () => {
     setDate(undefined);
     pushToUrl(undefined);
@@ -75,6 +105,25 @@ export const DateFilter = () => {
         </Button>
       </PopoverTrigger>
       <PopoverContent className="lg:w-auto w-full p-0" align="start">
+        <div className="p-4 pb-2">
+          <Select
+            onValueChange={(value) => {
+              handleSelectCustomDateRange(value);
+            }}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select" />
+            </SelectTrigger>
+            <SelectContent position="popper">
+              <SelectItem value="0">Today</SelectItem>
+              <SelectItem value="3">Last 3 days</SelectItem>
+              <SelectItem value="7">Last 7 days</SelectItem>
+              <SelectItem value="30">Last 30 days</SelectItem>
+              <SelectItem value="this-month">This month</SelectItem>
+              <SelectItem value="last-month">Last month</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
         <Calendar
           disabled={false}
           initialFocus
