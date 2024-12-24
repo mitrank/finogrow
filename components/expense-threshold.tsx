@@ -9,40 +9,14 @@ import {
   CardTitle,
 } from "./ui/card";
 import CurrencyInput from "react-currency-input-field";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useConfirm } from "@/hooks/use-confirm";
 import { Edit } from "lucide-react";
 import { FaCheck, FaXmark } from "react-icons/fa6";
-import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
-
-const boxVariant = cva("rounded-md p-1 shrink-0", {
-  variants: {
-    variant: {
-      default: "bg-blue-500/20",
-      success: "bg-emerald-500/20",
-      danger: "bg-rose-500/20",
-      warning: "bg-yellow-500/20",
-    },
-  },
-  defaultVariants: {
-    variant: "default",
-  },
-});
-
-const iconVariant = cva("size-6 lg:size-5", {
-  variants: {
-    variant: {
-      default: "fill-blue-500",
-      success: "fill-emerald-500",
-      danger: "fill-rose-500",
-      warning: "fill-yellow-500",
-    },
-  },
-  defaultVariants: {
-    variant: "default",
-  },
-});
+import { useGetBudget } from "@/features/budget/api/use-get-budget";
+import { useCreateBudget } from "@/features/budget/api/use-create-budget";
+import { useEditBudget } from "@/features/budget/api/use-edit-budget";
 
 export const ExpenseThreshold = () => {
   const [expenseThreshold, setExpenseThreshold] = useState("");
@@ -51,8 +25,18 @@ export const ExpenseThreshold = () => {
     "Are you sure?",
     "You're about to edit your Monthly Expense Threshold which could affect your expense lifestyle."
   );
+  const budgetQuery = useGetBudget();
+  const budgetData = budgetQuery.data;
+  const createBudgetMutation = useCreateBudget();
+  const editBudgetMutation = useEditBudget(budgetData?.id);
 
   const currentMonth = format(new Date(), "LLLL yyyy");
+
+  useEffect(() => {
+    if (budgetData) {
+      setExpenseThreshold(budgetData.amount.toString());
+    }
+  }, [budgetData]);
 
   const handleEditExpenseThreshold = async () => {
     const ok = await confirm();
@@ -60,6 +44,20 @@ export const ExpenseThreshold = () => {
     if (ok) {
       setIsEditing(true);
     }
+  };
+
+  const handleSubmitUpdatedExpense = (amount: string) => {
+    setIsEditing(false);
+    if (budgetData?.id) {
+      editBudgetMutation.mutate({ amount: parseFloat(amount) });
+    } else {
+      createBudgetMutation.mutate({ amount: parseFloat(amount) });
+    }
+  };
+
+  const handleCancelUpdatedExpense = () => {
+    setIsEditing(false);
+    setExpenseThreshold(budgetData?.amount.toString() || "");
   };
 
   return (
@@ -80,9 +78,9 @@ export const ExpenseThreshold = () => {
               <div className="relative flex flex-row gap-x-2 justify-between items-center">
                 <CurrencyInput
                   prefix="₹ "
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                  className="disabled:bg-slate-200 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                   placeholder="Enter your budget..."
-                  value={expenseThreshold} // show from the DB
+                  value={expenseThreshold}
                   onValueChange={(e) => setExpenseThreshold(e ?? "")}
                   disabled={!isEditing}
                 />
@@ -99,26 +97,16 @@ export const ExpenseThreshold = () => {
                 )}
               >
                 <div
-                  className={cn(boxVariant({ variant: "danger" }))}
-                  onClick={() => {}} // keep the data as it was from DB
+                  className="rounded-md p-1 shrink-0 bg-rose-500/20"
+                  onClick={handleCancelUpdatedExpense}
                 >
-                  <FaXmark
-                    className={cn(
-                      iconVariant({ variant: "danger" }),
-                      "hover:cursor-pointer"
-                    )}
-                  />
+                  <FaXmark className="size-6 lg:size-5 fill-rose-500 hover:cursor-pointer" />
                 </div>
                 <div
-                  className={cn(boxVariant({ variant: "success" }))}
-                  onClick={() => {}} // update the value and save it in the DB
+                  className="rounded-md p-1 shrink-0 bg-emerald-500/20"
+                  onClick={() => handleSubmitUpdatedExpense(expenseThreshold)}
                 >
-                  <FaCheck
-                    className={cn(
-                      iconVariant({ variant: "success" }),
-                      "hover:cursor-pointer"
-                    )}
-                  />
+                  <FaCheck className="size-6 lg:size-5 fill-emerald-500 hover:cursor-pointer" />
                 </div>
               </div>
             </div>
