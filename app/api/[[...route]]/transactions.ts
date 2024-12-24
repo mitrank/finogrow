@@ -290,7 +290,7 @@ const app = new Hono()
       }
 
       if (!id) {
-        return c.json({ error: "Missing Account ID" }, 400);
+        return c.json({ error: "Missing Transaction ID" }, 400);
       }
 
       const transactionsToDelete = db.$with("transactions_to_delete").as(
