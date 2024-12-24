@@ -114,7 +114,7 @@ export function DataTable<TData, TValue>({
           className="max-w-sm"
         />
         <div className="flex justify-between lg:justify-start items-center w-full gap-x-2">
-          {table.getColumn("category") && (
+          {identifier === "transactions" && table.getColumn("category") && (
             <DataTableFacetedFilter
               column={table.getColumn("category")}
               title="Categories"
