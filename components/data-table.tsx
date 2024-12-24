@@ -101,8 +101,6 @@ export function DataTable<TData, TValue>({
     }
   }, [data, identifier]);
 
-  console.log(data);
-
   return (
     <>
       <ConfirmationDialog />
