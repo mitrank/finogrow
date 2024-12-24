@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils";
 import { useGetBudget } from "@/features/budget/api/use-get-budget";
 import { useCreateBudget } from "@/features/budget/api/use-create-budget";
 import { useEditBudget } from "@/features/budget/api/use-edit-budget";
+import { ExpenseProgress } from "./expense-progress";
 
 export const ExpenseThreshold = () => {
   const [expenseThreshold, setExpenseThreshold] = useState("");
@@ -111,7 +112,9 @@ export const ExpenseThreshold = () => {
               </div>
             </div>
           </CardHeader>
-          <CardContent></CardContent>
+          <CardContent>
+            <ExpenseProgress limit={budgetData?.amount} />
+          </CardContent>
         </Card>
       </div>
     </>

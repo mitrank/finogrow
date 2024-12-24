@@ -22,7 +22,7 @@ export const useEditBudget = (id?: string) => {
       return await response.json();
     },
     onSuccess: () => {
-      toast.success("Threshold updated!");
+      toast.success("Expense threshold updated!");
       queryClient.invalidateQueries({ queryKey: ["budget"] });
     },
     onError: () => {
