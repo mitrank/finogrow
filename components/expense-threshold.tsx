@@ -18,6 +18,7 @@ import { useGetBudget } from "@/features/budget/api/use-get-budget";
 import { useCreateBudget } from "@/features/budget/api/use-create-budget";
 import { useEditBudget } from "@/features/budget/api/use-edit-budget";
 import { ExpenseProgress } from "./expense-progress";
+import { Skeleton } from "./ui/skeleton";
 
 export const ExpenseThreshold = () => {
   const [expenseThreshold, setExpenseThreshold] = useState("");
@@ -32,6 +33,10 @@ export const ExpenseThreshold = () => {
   const editBudgetMutation = useEditBudget(budgetData?.id);
 
   const currentMonth = format(new Date(), "LLLL yyyy");
+
+  const isPending =
+    createBudgetMutation.isPending || editBudgetMutation.isPending;
+  const isLoading = budgetQuery.isLoading;
 
   useEffect(() => {
     if (budgetData) {
@@ -61,7 +66,25 @@ export const ExpenseThreshold = () => {
     setExpenseThreshold(budgetData?.amount.toString() || "");
   };
 
-  return (
+  return isPending || isLoading ? (
+    <div className="w-full pb-2 mb-8">
+      <Card className="border-none drop-shadow-sm">
+        <CardHeader className="flex lg:flex-row justify-between gap-x-4 space-y-4 lg:space-y-0">
+          <div className="space-y-2">
+            <Skeleton className="h-8 w-48" />
+            <Skeleton className="h-4 w-24" />
+          </div>
+          <Skeleton className="h-8 w-48" />
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            <Skeleton className="h-8 w-full" />
+            <Skeleton className="h-4 w-72" />
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  ) : (
     <>
       <ConfirmationDialog />
       <div className="w-full pb-2 mb-8">
