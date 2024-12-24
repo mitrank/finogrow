@@ -63,7 +63,7 @@ export const ExpenseThreshold = () => {
   return (
     <>
       <ConfirmationDialog />
-      <div className="w-full lg:w-fit pb-2 mb-8">
+      <div className="w-full pb-2 mb-8">
         <Card className="border-none drop-shadow-sm">
           <CardHeader className="flex lg:flex-row justify-between gap-x-4 space-y-4 lg:space-y-0">
             <div>
