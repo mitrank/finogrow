@@ -38,9 +38,13 @@ export const ExpenseProgress = ({ limit }: Props) => {
       <div className="w-full h-9 border border-slate-300 rounded-md p-1">
         <div className="relative h-full bg-gradient-to-r from-blue-500 from-40% to-rose-500 rounded-md transition-all duration-700">
           <div
-            className="h-full bg-transparent transition-all duration-700"
+            className="relative h-full bg-transparent transition-all duration-700"
             style={{ width: `${monthlyExpensePercent}%` }}
-          />
+          >
+            <span className="absolute top-0.5 right-2 text-sm font-semibold text-white">
+              {monthlyExpensePercent}% spent
+            </span>
+          </div>
           <div
             className="absolute top-0 right-0 h-full bg-white transition-all duration-700"
             style={{ width: `${100 - monthlyExpensePercent}%` }}
