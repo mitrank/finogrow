@@ -67,20 +67,22 @@ export const CategoryForm = ({
             </FormItem>
           )}
         />
-        <Button disabled={disabled} className="w-full">
-          {id ? "Save Changes" : "Create Category"}
-        </Button>
-        {!!id && (
-          <Button
-            type="button"
-            disabled={disabled}
-            className="w-full"
-            variant="outline"
-            onClick={handleDelete}
-          >
-            <Trash className="size-4 mr-2" /> Delete Category
+        <div className="space-y-4">
+          <Button disabled={disabled} className="w-full">
+            {id ? "Save Changes" : "Create Category"}
           </Button>
-        )}
+          {!!id && (
+            <Button
+              type="button"
+              disabled={disabled}
+              className="w-full"
+              variant="outline"
+              onClick={handleDelete}
+            >
+              <Trash className="size-4 mr-2" /> Delete Category
+            </Button>
+          )}
+        </div>
       </form>
     </Form>
   );

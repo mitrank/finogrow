@@ -160,7 +160,8 @@ export const TransactionForm = ({
               <FormLabel>Amount</FormLabel>
               <FormControl>
                 <AmountInput
-                  {...field}
+                  value={field.value}
+                  onChange={field.onChange}
                   disabled={disabled}
                   placeholder="0.00"
                 />
@@ -185,20 +186,22 @@ export const TransactionForm = ({
             </FormItem>
           )}
         />
-        <Button disabled={disabled} className="w-full">
-          {id ? "Save Changes" : "Create Transaction"}
-        </Button>
-        {!!id && (
-          <Button
-            type="button"
-            disabled={disabled}
-            className="w-full"
-            variant="outline"
-            onClick={handleDelete}
-          >
-            <Trash className="size-4 mr-2" /> Delete Transaction
+        <div className="space-y-4">
+          <Button disabled={disabled} className="w-full">
+            {id ? "Save Changes" : "Create Transaction"}
           </Button>
-        )}
+          {!!id && (
+            <Button
+              type="button"
+              disabled={disabled}
+              className="w-full"
+              variant="outline"
+              onClick={handleDelete}
+            >
+              <Trash className="size-4 mr-2" /> Delete Transaction
+            </Button>
+          )}
+        </div>
       </form>
     </Form>
   );

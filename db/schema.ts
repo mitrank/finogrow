@@ -33,6 +33,12 @@ export const transactions = pgTable("transactions", {
   }),
 });
 
+export const budget = pgTable("budget", {
+  id: text("id").primaryKey(),
+  amount: integer("amount").notNull(),
+  userId: text("user_id").notNull(),
+});
+
 export const accountsRelations = relations(accounts, ({ many }) => ({
   transactions: many(transactions),
 }));
@@ -57,3 +63,4 @@ export const insertCategorySchema = createInsertSchema(categories);
 export const insertTransactionSchema = createInsertSchema(transactions, {
   date: z.coerce.date(),
 });
+export const insertBudgetSchema = createInsertSchema(budget);
