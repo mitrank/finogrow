@@ -9,7 +9,7 @@ export const WelcomeMessage = () => {
     <div className="space-y-2 mb-4">
       <h2 className="text-2xl lg:text-4xl text-white font-medium">
         Welcome back
-        {isSignedIn ? `, ${user?.username || user?.username}👋` : " "}
+        {isSignedIn ? `, ${user?.username || user?.firstName}👋` : " "}
       </h2>
       <p className="text-sm lg:text-base text-[#89B6FD]">
         This is your Financial Overview Report
